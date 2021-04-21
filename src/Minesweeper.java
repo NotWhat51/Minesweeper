@@ -2,12 +2,15 @@ import javax.swing.*;
 import java.awt.*;
 import Sweeper.Box;
 import Sweeper.Coord;
+import Sweeper.Game;
+import Sweeper.Ranges;
 
 public class Minesweeper extends JFrame {
 
+    private Game game;
     private JPanel panel;
-    private final int cols = 15;
-    private final int rows = 1;
+    private final int cols = 9;
+    private final int rows = 9;
     private final int image_size = 50;
 
     public static void main(String[] args) {
@@ -15,6 +18,8 @@ public class Minesweeper extends JFrame {
     }
 
     private Minesweeper () {
+        game = new Game (cols, rows);
+        game.start();
         setImages();
         initPanel();
         initFrame();
@@ -26,25 +31,25 @@ public class Minesweeper extends JFrame {
             @Override
             protected void paintComponent (Graphics g){
                 super.paintComponents(g);
-                for (Box box : Box.values()) {
-                    Coord coord = new Coord(box.ordinal() * image_size, 0);
-                    g.drawImage((Image) box.image,
-                            coord.x, coord.y, this);
+                for (Coord coord: Ranges.getAllCoords()) {
+                    g.drawImage((Image) game.getBox(coord).image,
+                            coord.x * image_size, coord.y * image_size, this);
                 }
             }
         };
-        panel.setPreferredSize(new Dimension(cols * image_size,rows * image_size));
+        panel.setPreferredSize(new Dimension(
+                Ranges.getSize().x * image_size, Ranges.getSize().y * image_size));
         add(panel);
     }
 
     private void initFrame() {
-        pack();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Minesweeper");
         setLocationRelativeTo(null);
         setResizable(false);
         setVisible(true);
         setIconImage(getImage("icon"));
+        pack();
     }
 
     private void setImages () {
