@@ -8,8 +8,6 @@ public enum Box {
     NUM4,
     NUM5,
     NUM6,
-    NUM7,
-    NUM8,
     BOMB,
     OPENED,
     CLOSED,
@@ -21,5 +19,9 @@ public enum Box {
 
     Box getNextNumberBox() {
         return Box.values()[this.ordinal() + 1];
+    }
+
+    int getNumber() {
+        return this.ordinal();
     }
 }

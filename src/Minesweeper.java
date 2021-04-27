@@ -17,7 +17,8 @@ public class Minesweeper extends JFrame {
     private final int cols = 9;
     private final int rows = 9;
     private final int bombs = 10;
-    private final int image_size = 50;
+    private final int image_wigth = 50;
+    private final int image_height = 60;
 
     public static void main(String[] args) {
         new Minesweeper().setVisible(true);
@@ -52,16 +53,19 @@ public class Minesweeper extends JFrame {
             protected void paintComponent (Graphics g){
                 super.paintComponents(g);
                 for (Coord coord: Ranges.getAllCoords()) {
+                    //int shiftX = 0;
+                    //if (coord.y % 2 != 0) shiftX = 25;
+                    //int shiftY = coord.y * 15;
                     g.drawImage((Image) game.getBox(coord).image,
-                            coord.x * image_size, coord.y * image_size, this);
+                            coord.x * image_wigth, coord.y * image_height, this);
                 }
             }
         };
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                int x = e.getX() / image_size;
-                int y = e.getY() / image_size;
+                int x = e.getX() / image_wigth;
+                int y = e.getY() / image_height;
                 Coord coord = new Coord (x, y);
                 if (e.getButton() == MouseEvent.BUTTON1)
                     game.pressLeftButton(coord);
@@ -74,7 +78,7 @@ public class Minesweeper extends JFrame {
             }
         });
         panel.setPreferredSize(new Dimension(
-                Ranges.getSize().x * image_size, Ranges.getSize().y * image_size));
+                Ranges.getSize().x * image_wigth + 25, Ranges.getSize().y * image_height ));
         add(panel);
     }
 
@@ -94,7 +98,7 @@ public class Minesweeper extends JFrame {
     }
 
     private Image getImage (String name) {
-        String filename = "img/" + name.toLowerCase() + ".png";
+        String filename = "img2/" + name.toLowerCase() + ".png";
         ImageIcon icon = new ImageIcon(getClass().getResource(filename));
         return icon.getImage();
     }

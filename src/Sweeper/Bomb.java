@@ -42,4 +42,8 @@ class Bomb {
             if (Box.BOMB != bombMap.get(around))
                 bombMap.set(around, bombMap.get(around).getNextNumberBox());
     }
+
+    int getTotalBombs() {
+        return totalBombs;
+    }
 }
