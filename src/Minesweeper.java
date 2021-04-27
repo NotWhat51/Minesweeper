@@ -12,6 +12,8 @@ public class Minesweeper extends JFrame {
 
     private Game game;
     private JPanel panel;
+    private JLabel label;
+
     private final int cols = 9;
     private final int rows = 9;
     private final int bombs = 10;
@@ -25,8 +27,22 @@ public class Minesweeper extends JFrame {
         game = new Game (cols, rows, bombs);
         game.start();
         setImages();
+        initLabel();
         initPanel();
         initFrame();
+    }
+    private void initLabel() {
+        label = new JLabel("Welcome!");
+        add(label, BorderLayout.SOUTH);
+    }
+
+    private String getMessage () {
+        switch (game.getState()) {
+            case PLAYED: return "You are playing now.";
+            case BOMBED: return "YOU LOSE!";
+            case WINNER: return "Well done, you found all the bombs!";
+            default: return "";
+        }
     }
 
     private void initPanel() {
@@ -49,6 +65,11 @@ public class Minesweeper extends JFrame {
                 Coord coord = new Coord (x, y);
                 if (e.getButton() == MouseEvent.BUTTON1)
                     game.pressLeftButton(coord);
+                if (e.getButton() == MouseEvent.BUTTON3)
+                    game.pressRightButton(coord);
+                if (e.getButton() == MouseEvent.BUTTON2)
+                    game.start();
+                label.setText(getMessage());
                 panel.repaint();
             }
         });
@@ -60,11 +81,11 @@ public class Minesweeper extends JFrame {
     private void initFrame() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Minesweeper");
-        setLocationRelativeTo(null);
         setResizable(false);
         setVisible(true);
         setIconImage(getImage("icon"));
         pack();
+        setLocationRelativeTo(null);
     }
 
     private void setImages () {
