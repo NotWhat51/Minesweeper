@@ -53,11 +53,11 @@ public class Minesweeper extends JFrame {
             protected void paintComponent (Graphics g){
                 super.paintComponents(g);
                 for (Coord coord: Ranges.getAllCoords()) {
-                    //int shiftX = 0;
-                    //if (coord.y % 2 != 0) shiftX = 25;
+                    int shiftX = 0;
+                    if (coord.y % 2 != 0) shiftX = 25;
                     //int shiftY = coord.y * 15;
                     g.drawImage((Image) game.getBox(coord).image,
-                            coord.x * image_wigth, coord.y * image_height, this);
+                            coord.x * image_wigth + shiftX, coord.y * image_height, this);
                 }
             }
         };
