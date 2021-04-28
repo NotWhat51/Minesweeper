@@ -59,7 +59,7 @@ public class Game {
             if(flag.getCountOfFlagedBoxesAround(coord) == bomb.get(coord).getNumber())
                 for (Coord around: Ranges.getCoordsAround(coord))
                     if (flag.get(around) == Box.CLOSED)
-                        openBox(around);
+                        openBox(coord);
     }
 
 
