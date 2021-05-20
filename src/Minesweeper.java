@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -10,13 +11,16 @@ import Sweeper.Ranges;
 
 public class Minesweeper extends JFrame {
 
-    private Game game;
+    private final Game game;
     private JPanel panel;
     private JLabel label;
 
-    private final int cols = 9;
-    private final int rows = 9;
-    private final int bombs = 10;
+    private final int cols = 10;
+    private final int rows = 10;
+    private final int bombs_beginner = 10;
+    private final int bombs_intermediate = 17;
+    private final int bombs_expert = 20;
+    private int bombs;
     private final int image_wigth = 50;
     private final int image_height = 60;
 
@@ -25,6 +29,7 @@ public class Minesweeper extends JFrame {
     }
 
     private Minesweeper () {
+
         game = new Game (cols, rows, bombs);
         game.start();
         setImages();
@@ -41,7 +46,7 @@ public class Minesweeper extends JFrame {
         switch (game.getState()) {
             case PLAYED: return "You are playing now.";
             case BOMBED: return "YOU LOSE!";
-            case WINNER: return "Well done, you found all the bombs!";
+            case WINNER: return "YOU WIN! You found all the bombs!";
             default: return "";
         }
     }
@@ -53,19 +58,23 @@ public class Minesweeper extends JFrame {
             protected void paintComponent (Graphics g){
                 super.paintComponents(g);
                 for (Coord coord: Ranges.getAllCoords()) {
-                    int shiftX = 0;
-                    if (coord.y % 2 != 0) shiftX = 25;
-                    //int shiftY = coord.y * 15;
+                    int offsetX = 0;
+                    if (coord.y % 2 != 0) offsetX = 25;
                     g.drawImage((Image) game.getBox(coord).image,
-                            coord.x * image_wigth + shiftX, coord.y * image_height, this);
+                            coord.x * image_wigth + offsetX , coord.y * image_height, this);
                 }
             }
         };
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                int x = e.getX() / image_wigth;
                 int y = e.getY() / image_height;
+                int x;
+                int offsetX = 0;
+                if (y % 2 != 0) {
+                    offsetX = -25;
+                }
+                x = (e.getX() + offsetX) / image_wigth;
                 Coord coord = new Coord (x, y);
                 if (e.getButton() == MouseEvent.BUTTON1)
                     game.pressLeftButton(coord);
@@ -82,6 +91,7 @@ public class Minesweeper extends JFrame {
         add(panel);
     }
 
+
     private void initFrame() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Minesweeper");
@@ -91,6 +101,7 @@ public class Minesweeper extends JFrame {
         pack();
         setLocationRelativeTo(null);
     }
+
 
     private void setImages () {
         for (Box box: Box.values())
