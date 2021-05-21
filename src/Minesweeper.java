@@ -1,11 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import Sweeper.Box;
 import Sweeper.Coord;
+import Sweeper.Dialog;
 import Sweeper.Game;
 import Sweeper.Ranges;
 
@@ -17,26 +19,27 @@ public class Minesweeper extends JFrame {
 
     private final int cols = 10;
     private final int rows = 10;
-    private final int bombs_beginner = 10;
-    private final int bombs_intermediate = 17;
-    private final int bombs_expert = 20;
-    private int bombs;
+    private int bombs = 10;
     private final int image_wigth = 50;
     private final int image_height = 60;
 
+
     public static void main(String[] args) {
+
         new Minesweeper().setVisible(true);
     }
 
     private Minesweeper () {
-
         game = new Game (cols, rows, bombs);
         game.start();
         setImages();
-        initLabel();
+
         initPanel();
         initFrame();
+        initLabel();
+
     }
+
     private void initLabel() {
         label = new JLabel("Welcome!");
         add(label, BorderLayout.SOUTH);
@@ -87,7 +90,7 @@ public class Minesweeper extends JFrame {
             }
         });
         panel.setPreferredSize(new Dimension(
-                Ranges.getSize().x * image_wigth + 25, Ranges.getSize().y * image_height ));
+                Ranges.getSize().x * image_wigth + 25, Ranges.getSize().y * image_height + 40 ));
         add(panel);
     }
 
@@ -100,8 +103,29 @@ public class Minesweeper extends JFrame {
         setIconImage(getImage("icon"));
         pack();
         setLocationRelativeTo(null);
-    }
+        JMenuBar bar = new JMenuBar();
+        JMenu menu = new JMenu("Game");
+        menu.addSeparator();
+        menu.add(new JMenuItem("Exit")).addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        JMenuItem help = new JMenuItem("Help");
+        bar.add(menu);
+        bar.add(help);
+        Dialog rule = new Dialog();
+        help.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                rule.setVisible(true);
+            }
+        });
+        setJMenuBar(bar);
+        revalidate();
 
+    }
 
     private void setImages () {
         for (Box box: Box.values())
